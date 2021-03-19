@@ -8,7 +8,8 @@ dotenv.config({
   path: process.env.NODE_ENV === "production" ? ".env.prod" : ".env.dev",
 });
 
-export const CORS_ORIGIN: string = process.env.CORS_ORIGIN || "notin";
+export const CORS_ORIGIN: string | undefined = process.env.CORS_ORIGIN;
+export const PORT = process.env.PORT;
 export const DB_CONFIG: ConnectionOptions = {
   type: "postgres",
   database: process.env.DB,

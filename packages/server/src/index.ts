@@ -4,8 +4,8 @@ import express from "express";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { CORS_ORIGIN, DB_CONFIG } from "./constants";
-import { HelloResolver } from "./resolvers/HelloWorld";
+import { CORS_ORIGIN, DB_CONFIG, PORT } from "./constants";
+import { ProducerResolver } from "./resolvers/producer";
 
 (async () => {
   await createConnection(DB_CONFIG);
@@ -20,7 +20,7 @@ import { HelloResolver } from "./resolvers/HelloWorld";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver],
+      resolvers: [ProducerResolver],
       validate: false,
     }),
   });
@@ -30,7 +30,7 @@ import { HelloResolver } from "./resolvers/HelloWorld";
     cors: false,
   });
 
-  app.listen(4000, () => {
-    console.log("server started");
+  app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
   });
 })().catch((err) => console.log(err));
