@@ -11,3 +11,12 @@ export class ProducerInput {
   @Field()
   canDeliver!: boolean;
 }
+
+@InputType()
+export class UpdateProducerInput {
+  @Field({ nullable: true })
+  name: string;
+
+  @Field({ nullable: true })
+  canDeliver: boolean;
+}

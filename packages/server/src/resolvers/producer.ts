@@ -1,6 +1,8 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
+import { getConnection } from "typeorm";
 import { Producer } from "../entities/Producer";
-import { ProducerInput } from "./input/producer";
+import { Product } from "../entities/Product";
+import { ProducerInput, UpdateProducerInput } from "./input/producer";
 
 @Resolver()
 export class ProducerResolver {
@@ -12,14 +14,48 @@ export class ProducerResolver {
   }
 
   @Query(() => Producer)
-  getOne(
+  producer(
     @Arg("uuid", () => String) uuid: string
   ): Promise<Producer | undefined> {
     return Producer.findOne({ uuid }, { relations: ["products"] });
   }
 
   @Query(() => [Producer])
-  getAll(): Promise<Producer[]> {
-    return Producer.find();
+  producers(): Promise<Producer[]> {
+    return Producer.find({ relations: ["products"] });
+  }
+
+  @Mutation(() => Producer)
+  async editProducer(
+    @Arg("input", () => UpdateProducerInput) input: UpdateProducerInput,
+    @Arg("uuid", () => String) uuid: number
+  ): Promise<Producer | undefined> {
+    const res = await getConnection()
+      .createQueryBuilder()
+      .update(Producer)
+      .set({ name: input.name, canDeliver: input.canDeliver })
+      .where("uuid = :uuid", { uuid })
+      .returning("*")
+      .execute();
+    return res.raw[0];
+  }
+
+  @Mutation(() => Boolean)
+  async deleteProducer(@Arg("id", () => Int) id: number): Promise<boolean> {
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(Product)
+      .where('"ownerId" = :id', { id })
+      .execute();
+
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(Producer)
+      .where("id = :id", { id })
+      .execute();
+
+    return true;
   }
 }
