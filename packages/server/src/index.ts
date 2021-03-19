@@ -6,6 +6,7 @@ import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { CORS_ORIGIN, DB_CONFIG, PORT } from "./constants";
 import { ProducerResolver } from "./resolvers/producer";
+import { ProductResolver } from "./resolvers/product";
 
 (async () => {
   await createConnection(DB_CONFIG);
@@ -20,7 +21,7 @@ import { ProducerResolver } from "./resolvers/producer";
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [ProducerResolver],
+      resolvers: [ProducerResolver, ProductResolver],
       validate: false,
     }),
   });

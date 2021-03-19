@@ -35,7 +35,7 @@ export class Producer extends BaseEntity {
   @CreateDateColumn()
   createdAt!: Date;
 
-  // @Field()
+  @Field(() => [Product])
   @OneToMany(() => Product, (product) => product.owner)
   products: Product[];
 }

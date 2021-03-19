@@ -15,7 +15,7 @@ export class ProducerResolver {
   getOne(
     @Arg("uuid", () => String) uuid: string
   ): Promise<Producer | undefined> {
-    return Producer.findOne({ uuid });
+    return Producer.findOne({ uuid }, { relations: ["products"] });
   }
 
   @Query(() => [Producer])
