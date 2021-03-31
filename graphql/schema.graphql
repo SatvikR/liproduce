@@ -1,0 +1,28 @@
+# Schema Types
+type Producer {
+  id: Int!
+  uuid: String!
+  producerName: String!
+  canDeliver: Boolean!
+  products: [Product!]!
+}
+
+type Product {
+  id: Int!
+  uuid: String!
+  productName: String!
+  ownerId: Int!
+  createdAt: String!
+  owner: Producer!
+}
+
+# Queries
+type Query {
+  # producer queries
+  producers: [Producer!]!
+  producer(id: Int!): Producer!
+
+  # product queries
+  products: [Product!]!
+  product(id: Int!): Product!
+}
