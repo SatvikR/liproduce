@@ -1,4 +1,4 @@
-package resolvers
+package gen
 
 // This file will not be regenerated automatically.
 //

@@ -1,4 +1,4 @@
-package resolvers
+package gen
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
 // will be copied through when generating and any unknown code will be moved to the end.
@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	"github.com/SatvikR/liproduce/pkg/database/entities"
-	"github.com/SatvikR/liproduce/pkg/generated"
+	"github.com/SatvikR/liproduce/pkg/gen/generated"
 )
 
 func (r *productResolver) CreatedAt(ctx context.Context, obj *entities.Product) (string, error) {
