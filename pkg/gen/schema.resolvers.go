@@ -9,14 +9,15 @@ import (
 
 	"github.com/SatvikR/liproduce/pkg/database/entities"
 	"github.com/SatvikR/liproduce/pkg/gen/generated"
+	"github.com/SatvikR/liproduce/pkg/resolvers"
 )
 
 func (r *productResolver) CreatedAt(ctx context.Context, obj *entities.Product) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.CreatedAt.Format("2006-01-02 15:04:05"), nil
 }
 
 func (r *queryResolver) Producers(ctx context.Context) ([]*entities.Producer, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.Producers(&ctx)
 }
 
 func (r *queryResolver) Producer(ctx context.Context, id int) (*entities.Producer, error) {

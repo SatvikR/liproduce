@@ -7,6 +7,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/SatvikR/liproduce/pkg/database"
 	"github.com/SatvikR/liproduce/pkg/gen"
 	"github.com/SatvikR/liproduce/pkg/gen/generated"
 )
@@ -14,6 +15,8 @@ import (
 const defaultPort = "8080"
 
 func main() {
+	database.CreateConnection()
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = defaultPort
