@@ -16,6 +16,13 @@ type Product {
   owner: Producer!
 }
 
+# Inputs
+
+input NewProducer {
+  producerName: String!
+  canDeliver: Boolean!
+}
+
 # Queries
 type Query {
   # producer queries
@@ -25,4 +32,9 @@ type Query {
   # product queries
   products: [Product!]!
   product(id: Int!): Product!
+}
+
+# Mutations
+type Mutation {
+  createProducer(input: NewProducer!): Producer!
 }

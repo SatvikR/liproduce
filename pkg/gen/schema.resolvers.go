@@ -7,10 +7,15 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/SatvikR/liproduce/graph/model"
 	"github.com/SatvikR/liproduce/pkg/database/entities"
 	"github.com/SatvikR/liproduce/pkg/gen/generated"
 	"github.com/SatvikR/liproduce/pkg/resolvers"
 )
+
+func (r *mutationResolver) CreateProducer(ctx context.Context, input model.NewProducer) (*entities.Producer, error) {
+	return resolvers.CreateProducer(&ctx, &input)
+}
 
 func (r *productResolver) CreatedAt(ctx context.Context, obj *entities.Product) (string, error) {
 	return obj.CreatedAt.Format("2006-01-02 15:04:05"), nil
@@ -21,7 +26,7 @@ func (r *queryResolver) Producers(ctx context.Context) ([]*entities.Producer, er
 }
 
 func (r *queryResolver) Producer(ctx context.Context, id int) (*entities.Producer, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.Producer(&ctx, id)
 }
 
 func (r *queryResolver) Products(ctx context.Context) ([]*entities.Product, error) {
@@ -32,11 +37,15 @@ func (r *queryResolver) Product(ctx context.Context, id int) (*entities.Product,
 	panic(fmt.Errorf("not implemented"))
 }
 
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
+
 // Product returns generated.ProductResolver implementation.
 func (r *Resolver) Product() generated.ProductResolver { return &productResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type productResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
