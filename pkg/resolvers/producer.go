@@ -2,6 +2,7 @@ package resolvers
 
 import (
 	"context"
+	"strings"
 
 	"github.com/SatvikR/liproduce/pkg/database"
 	"github.com/SatvikR/liproduce/pkg/database/entities"
@@ -31,15 +32,27 @@ func Producer(ctx *context.Context, id int) (*entities.Producer, error) {
 	return producer, nil
 }
 
-func CreateProducer(ctx *context.Context, input *model.NewProducer) (*entities.Producer, error) {
+func CreateProducer(ctx *context.Context, input *model.NewProducer) (*model.ProducerResponse, error) {
 	newProducer := &entities.Producer{
 		ProducerName: input.ProducerName,
 		CanDeliver:   input.CanDeliver,
 	}
 
-	database.GetConnection().
+	_, err := database.GetConnection().
 		Model(newProducer).
 		Insert()
 
-	return newProducer, nil
+	if err != nil {
+		if strings.Contains(err.Error(), "#23505") {
+			errorMessage := "That producer name is already taken"
+
+			return &model.ProducerResponse{
+				Error: &errorMessage,
+			}, nil
+		}
+	}
+
+	return &model.ProducerResponse{
+		Producer: newProducer,
+	}, nil
 }

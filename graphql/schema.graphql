@@ -16,6 +16,11 @@ type Product {
   owner: Producer!
 }
 
+type ProducerResponse {
+  producer: Producer
+  error: String
+}
+
 # Inputs
 input NewProducer {
   producerName: String!
@@ -40,6 +45,6 @@ type Query {
 
 # Mutations
 type Mutation {
-  createProducer(input: NewProducer!): Producer!
+  createProducer(input: NewProducer!): ProducerResponse!
   createProduct(input: NewProduct!): Product!
 }

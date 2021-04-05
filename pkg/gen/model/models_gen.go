@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"github.com/SatvikR/liproduce/pkg/database/entities"
+)
+
 type NewProducer struct {
 	ProducerName string `json:"producerName"`
 	CanDeliver   bool   `json:"canDeliver"`
@@ -10,4 +14,9 @@ type NewProducer struct {
 type NewProduct struct {
 	ProductName string `json:"productName"`
 	OwnerID     int    `json:"ownerId"`
+}
+
+type ProducerResponse struct {
+	Producer *entities.Producer `json:"producer"`
+	Error    *string            `json:"error"`
 }

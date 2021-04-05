@@ -12,7 +12,7 @@ import (
 	"github.com/SatvikR/liproduce/pkg/resolvers"
 )
 
-func (r *mutationResolver) CreateProducer(ctx context.Context, input model.NewProducer) (*entities.Producer, error) {
+func (r *mutationResolver) CreateProducer(ctx context.Context, input model.NewProducer) (*model.ProducerResponse, error) {
 	return resolvers.CreateProducer(&ctx, &input)
 }
 

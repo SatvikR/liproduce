@@ -58,6 +58,11 @@ type ComplexityRoot struct {
 		Uuid         func(childComplexity int) int
 	}
 
+	ProducerResponse struct {
+		Error    func(childComplexity int) int
+		Producer func(childComplexity int) int
+	}
+
 	Product struct {
 		CreatedAt   func(childComplexity int) int
 		Id          func(childComplexity int) int
@@ -76,7 +81,7 @@ type ComplexityRoot struct {
 }
 
 type MutationResolver interface {
-	CreateProducer(ctx context.Context, input model.NewProducer) (*entities.Producer, error)
+	CreateProducer(ctx context.Context, input model.NewProducer) (*model.ProducerResponse, error)
 	CreateProduct(ctx context.Context, input model.NewProduct) (*entities.Product, error)
 }
 type ProductResolver interface {
@@ -162,6 +167,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Producer.Uuid(childComplexity), true
+
+	case "ProducerResponse.error":
+		if e.complexity.ProducerResponse.Error == nil {
+			break
+		}
+
+		return e.complexity.ProducerResponse.Error(childComplexity), true
+
+	case "ProducerResponse.producer":
+		if e.complexity.ProducerResponse.Producer == nil {
+			break
+		}
+
+		return e.complexity.ProducerResponse.Producer(childComplexity), true
 
 	case "Product.createdAt":
 		if e.complexity.Product.CreatedAt == nil {
@@ -325,6 +344,11 @@ type Product {
   owner: Producer!
 }
 
+type ProducerResponse {
+  producer: Producer
+  error: String
+}
+
 # Inputs
 input NewProducer {
   producerName: String!
@@ -349,7 +373,7 @@ type Query {
 
 # Mutations
 type Mutation {
-  createProducer(input: NewProducer!): Producer!
+  createProducer(input: NewProducer!): ProducerResponse!
   createProduct(input: NewProduct!): Product!
 }
 `, BuiltIn: false},
@@ -510,9 +534,9 @@ func (ec *executionContext) _Mutation_createProducer(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*entities.Producer)
+	res := resTmp.(*model.ProducerResponse)
 	fc.Result = res
-	return ec.marshalNProducer2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProducer(ctx, field.Selections, res)
+	return ec.marshalNProducerResponse2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐProducerResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createProduct(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -730,6 +754,70 @@ func (ec *executionContext) _Producer_products(ctx context.Context, field graphq
 	res := resTmp.([]*entities.Product)
 	fc.Result = res
 	return ec.marshalNProduct2ᚕᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProductᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ProducerResponse_producer(ctx context.Context, field graphql.CollectedField, obj *model.ProducerResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ProducerResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Producer, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*entities.Producer)
+	fc.Result = res
+	return ec.marshalOProducer2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProducer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ProducerResponse_error(ctx context.Context, field graphql.CollectedField, obj *model.ProducerResponse) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ProducerResponse",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Error, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Product_id(ctx context.Context, field graphql.CollectedField, obj *entities.Product) (ret graphql.Marshaler) {
@@ -2401,6 +2489,32 @@ func (ec *executionContext) _Producer(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var producerResponseImplementors = []string{"ProducerResponse"}
+
+func (ec *executionContext) _ProducerResponse(ctx context.Context, sel ast.SelectionSet, obj *model.ProducerResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, producerResponseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ProducerResponse")
+		case "producer":
+			out.Values[i] = ec._ProducerResponse_producer(ctx, field, obj)
+		case "error":
+			out.Values[i] = ec._ProducerResponse_error(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var productImplementors = []string{"Product"}
 
 func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, obj *entities.Product) graphql.Marshaler {
@@ -2899,6 +3013,20 @@ func (ec *executionContext) marshalNProducer2ᚖgithubᚗcomᚋSatvikRᚋliprodu
 	return ec._Producer(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNProducerResponse2githubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐProducerResponse(ctx context.Context, sel ast.SelectionSet, v model.ProducerResponse) graphql.Marshaler {
+	return ec._ProducerResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNProducerResponse2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐProducerResponse(ctx context.Context, sel ast.SelectionSet, v *model.ProducerResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._ProducerResponse(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNProduct2githubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProduct(ctx context.Context, sel ast.SelectionSet, v entities.Product) graphql.Marshaler {
 	return ec._Product(ctx, sel, &v)
 }
@@ -3216,6 +3344,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOProducer2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProducer(ctx context.Context, sel ast.SelectionSet, v *entities.Producer) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Producer(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
