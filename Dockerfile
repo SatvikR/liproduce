@@ -15,11 +15,10 @@ RUN go build -o /usr/bin/liproduce ./cmd/liproduce
 
 RUN go build -o /usr/bin/migrations ./cmd/migrations
 
-FROM scratch AS bin
-
-COPY --from=build /usr/bin/liproduce /usr/bin/
-COPY --from=build /usr/src/app/build/commands.sh /scripts/commands.sh
+RUN chmod +x ./build/commands.sh
 
 EXPOSE 8080
 
-ENTRYPOINT [ "/scripts/commands.sh" ]
+ENV ENVIRONMENT=production
+
+ENTRYPOINT [ "/usr/src/app/build/commands.sh" ]

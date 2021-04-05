@@ -12,6 +12,8 @@ else
 	CLEAN=rm -rf $(BIN)
 endif
 
+.PHONY: build
+
 build:
 	$(CREATE_BIN)
 	$(GO) build -o $(BIN)/liproduce$(EXE) ./cmd/liproduce 
