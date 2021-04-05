@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-pg/migrations/v8"
 	"github.com/go-pg/pg/v10"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 const usageText = `This program runs command on the db. Supported commands are:
@@ -26,10 +27,10 @@ func main() {
 	flag.Parse()
 
 	db := pg.Connect(&pg.Options{
-		Addr:     "localhost:5432",
-		User:     "postgres",
-		Password: "postgres",
-		Database: "liproduce",
+		Addr:     os.Getenv("DB_ADDR"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		Database: os.Getenv("DB_NAME"),
 	})
 
 	oldVersion, newVersion, err := migrations.Run(db, flag.Args()...)

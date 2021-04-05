@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/go-pg/pg/v10"
 )
@@ -27,12 +28,12 @@ func (d dbLogger) AfterQuery(c context.Context, q *pg.QueryEvent) error {
 // CreateConnection connects to the postgres database.
 // Stores db variables in this file
 func CreateConnection() {
-	// TODO switch this to environment variables
+
 	db = pg.Connect(&pg.Options{
-		Addr:     "localhost:5432",
-		User:     "postgres",
-		Password: "postgres",
-		Database: "liproduce",
+		Addr:     os.Getenv("DB_ADDR"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		Database: os.Getenv("DB_NAME"),
 	})
 
 	db.AddQueryHook(dbLogger{})

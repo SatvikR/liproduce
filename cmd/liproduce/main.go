@@ -10,6 +10,7 @@ import (
 	"github.com/SatvikR/liproduce/pkg/database"
 	"github.com/SatvikR/liproduce/pkg/gen"
 	"github.com/SatvikR/liproduce/pkg/gen/generated"
+	_ "github.com/joho/godotenv/autoload"
 )
 
 const defaultPort = "8080"
