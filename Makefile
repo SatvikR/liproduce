@@ -19,3 +19,11 @@ build:
 
 clean:
 	$(CLEAN)	
+
+gen:
+	go run github.com/99designs/gqlgen
+
+start:
+	$(BIN)/liproduce$(EXE)
+
+dev: build start

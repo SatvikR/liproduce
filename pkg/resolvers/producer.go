@@ -3,9 +3,9 @@ package resolvers
 import (
 	"context"
 
-	"github.com/SatvikR/liproduce/graph/model"
 	"github.com/SatvikR/liproduce/pkg/database"
 	"github.com/SatvikR/liproduce/pkg/database/entities"
+	"github.com/SatvikR/liproduce/pkg/gen/model"
 )
 
 func Producers(ctx *context.Context) ([]*entities.Producer, error) {

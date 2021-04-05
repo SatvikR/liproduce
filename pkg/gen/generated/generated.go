@@ -12,8 +12,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/SatvikR/liproduce/graph/model"
 	"github.com/SatvikR/liproduce/pkg/database/entities"
+	"github.com/SatvikR/liproduce/pkg/gen/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -47,6 +47,7 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Mutation struct {
 		CreateProducer func(childComplexity int, input model.NewProducer) int
+		CreateProduct  func(childComplexity int, input model.NewProduct) int
 	}
 
 	Producer struct {
@@ -76,6 +77,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateProducer(ctx context.Context, input model.NewProducer) (*entities.Producer, error)
+	CreateProduct(ctx context.Context, input model.NewProduct) (*entities.Product, error)
 }
 type ProductResolver interface {
 	CreatedAt(ctx context.Context, obj *entities.Product) (string, error)
@@ -113,6 +115,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateProducer(childComplexity, args["input"].(model.NewProducer)), true
+
+	case "Mutation.createProduct":
+		if e.complexity.Mutation.CreateProduct == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createProduct_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateProduct(childComplexity, args["input"].(model.NewProduct)), true
 
 	case "Producer.canDeliver":
 		if e.complexity.Producer.CanDeliver == nil {
@@ -293,7 +307,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "graphql/schema.graphql", Input: `# Schema Types
+	{Name: "graphql/schema.graphql", Input: `# Object Types
 type Producer {
   id: Int!
   uuid: String!
@@ -312,10 +326,14 @@ type Product {
 }
 
 # Inputs
-
 input NewProducer {
   producerName: String!
   canDeliver: Boolean!
+}
+
+input NewProduct {
+  productName: String!
+  ownerId: Int!
 }
 
 # Queries
@@ -332,6 +350,7 @@ type Query {
 # Mutations
 type Mutation {
   createProducer(input: NewProducer!): Producer!
+  createProduct(input: NewProduct!): Product!
 }
 `, BuiltIn: false},
 }
@@ -347,7 +366,22 @@ func (ec *executionContext) field_Mutation_createProducer_args(ctx context.Conte
 	var arg0 model.NewProducer
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewProducer2githubᚗcomᚋSatvikRᚋliproduceᚋgraphᚋmodelᚐNewProducer(ctx, tmp)
+		arg0, err = ec.unmarshalNNewProducer2githubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐNewProducer(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createProduct_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.NewProduct
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNewProduct2githubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐNewProduct(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -479,6 +513,48 @@ func (ec *executionContext) _Mutation_createProducer(ctx context.Context, field 
 	res := resTmp.(*entities.Producer)
 	fc.Result = res
 	return ec.marshalNProducer2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProducer(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createProduct(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createProduct_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateProduct(rctx, args["input"].(model.NewProduct))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*entities.Product)
+	fc.Result = res
+	return ec.marshalNProduct2ᚖgithubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋdatabaseᚋentitiesᚐProduct(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Producer_id(ctx context.Context, field graphql.CollectedField, obj *entities.Producer) (ret graphql.Marshaler) {
@@ -2206,6 +2282,34 @@ func (ec *executionContext) unmarshalInputNewProducer(ctx context.Context, obj i
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewProduct(ctx context.Context, obj interface{}) (model.NewProduct, error) {
+	var it model.NewProduct
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "productName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("productName"))
+			it.ProductName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "ownerId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ownerId"))
+			it.OwnerID, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -2231,6 +2335,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = graphql.MarshalString("Mutation")
 		case "createProducer":
 			out.Values[i] = ec._Mutation_createProducer(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createProduct":
+			out.Values[i] = ec._Mutation_createProduct(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2729,8 +2838,13 @@ func (ec *executionContext) marshalNInt2int32(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) unmarshalNNewProducer2githubᚗcomᚋSatvikRᚋliproduceᚋgraphᚋmodelᚐNewProducer(ctx context.Context, v interface{}) (model.NewProducer, error) {
+func (ec *executionContext) unmarshalNNewProducer2githubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐNewProducer(ctx context.Context, v interface{}) (model.NewProducer, error) {
 	res, err := ec.unmarshalInputNewProducer(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNNewProduct2githubᚗcomᚋSatvikRᚋliproduceᚋpkgᚋgenᚋmodelᚐNewProduct(ctx context.Context, v interface{}) (model.NewProduct, error) {
+	res, err := ec.unmarshalInputNewProduct(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 

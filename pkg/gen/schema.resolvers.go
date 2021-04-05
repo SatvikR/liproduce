@@ -5,16 +5,19 @@ package gen
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/SatvikR/liproduce/graph/model"
 	"github.com/SatvikR/liproduce/pkg/database/entities"
 	"github.com/SatvikR/liproduce/pkg/gen/generated"
+	"github.com/SatvikR/liproduce/pkg/gen/model"
 	"github.com/SatvikR/liproduce/pkg/resolvers"
 )
 
 func (r *mutationResolver) CreateProducer(ctx context.Context, input model.NewProducer) (*entities.Producer, error) {
 	return resolvers.CreateProducer(&ctx, &input)
+}
+
+func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*entities.Product, error) {
+	return resolvers.CreateProduct(&ctx, &input)
 }
 
 func (r *productResolver) CreatedAt(ctx context.Context, obj *entities.Product) (string, error) {
@@ -30,11 +33,11 @@ func (r *queryResolver) Producer(ctx context.Context, id int) (*entities.Produce
 }
 
 func (r *queryResolver) Products(ctx context.Context) ([]*entities.Product, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.Products(&ctx)
 }
 
 func (r *queryResolver) Product(ctx context.Context, id int) (*entities.Product, error) {
-	panic(fmt.Errorf("not implemented"))
+	return resolvers.Product(&ctx, id)
 }
 
 // Mutation returns generated.MutationResolver implementation.

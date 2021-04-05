@@ -6,3 +6,8 @@ type NewProducer struct {
 	ProducerName string `json:"producerName"`
 	CanDeliver   bool   `json:"canDeliver"`
 }
+
+type NewProduct struct {
+	ProductName string `json:"productName"`
+	OwnerID     int    `json:"ownerId"`
+}

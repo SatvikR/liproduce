@@ -1,4 +1,4 @@
-# Schema Types
+# Object Types
 type Producer {
   id: Int!
   uuid: String!
@@ -17,10 +17,14 @@ type Product {
 }
 
 # Inputs
-
 input NewProducer {
   producerName: String!
   canDeliver: Boolean!
+}
+
+input NewProduct {
+  productName: String!
+  ownerId: Int!
 }
 
 # Queries
@@ -37,4 +41,5 @@ type Query {
 # Mutations
 type Mutation {
   createProducer(input: NewProducer!): Producer!
+  createProduct(input: NewProduct!): Product!
 }
