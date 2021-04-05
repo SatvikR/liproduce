@@ -36,7 +36,9 @@ func CreateConnection() {
 		Database: os.Getenv("DB_NAME"),
 	})
 
-	db.AddQueryHook(dbLogger{})
+	if os.Getenv("ENVIRONMENT") != "production" {
+		db.AddQueryHook(dbLogger{})
+	}
 }
 
 // GetConnection will return the connection object to run queries on
