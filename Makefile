@@ -26,4 +26,10 @@ gen:
 start:
 	$(BIN)/liproduce$(EXE)
 
+migrateup:
+	$(BIN)/migrations$(EXE) up
+
+migratedown:
+	$(BIN)/migrations$(EXE) down
+
 dev: build start
