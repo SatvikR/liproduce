@@ -21,7 +21,7 @@ A platform/marketplace for small farmers to sell fresh produce restaurants
 Create your database with
 
 ```sql
-CREATE DATABASE liproduce_db_name
+CREATE DATABASE liproduce_db_name;
 ```
 
 in a psql shell
