@@ -35,22 +35,17 @@ DB_PASSWORD=<your db password>
 DB_NAME=<ex. liproducedb>
 ```
 
-2. Build code
+> If you are on windows, run the following steps in git bash or cygwin, and make sure you have make installed
+
+2. Run migrations (required)
 
 ```
-make
-```
-
-The makefile is crossplatform, so if you are using [make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm), it will still work
-
-3. Run migrations (required)
-
-```
+make migrateinit
 make migrateup
 # use make migratedown to go down a version
 ```
 
-4. Start server
+3. Start server
 
 ```
 make start
@@ -58,4 +53,4 @@ make start
 make dev
 ```
 
-Go to http://localhost:8080/ for the graphql playground, http://localhost:8080/graphql for the graphql endpoint
+Go to http://localhost:8080/ for the graphql playground, http://localhost:8080/query for the graphql endpoint

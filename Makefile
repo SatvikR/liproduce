@@ -1,37 +1,38 @@
-GO=go
+GOC=go build
+BIN=bin
+SRCS=$(shell find . -type f -name '*.go')
+MIGRATIONS_MAIN=./cmd/migrations/main.go
+LIPRODUCE_MAIN=./cmd/liproduce/main.go
+LIPRODUCE_EXE=$(BIN)/liproduce
+MIGRATIONS_EXE=$(BIN)/migrations
 
-# Change variables according to os
-ifeq ($(OS), Windows_NT)
-	BIN=.\bin
-	EXE=.exe
-	CREATE_BIN=if not exist "$(BIN)" mkdir $(BIN)
-	CLEAN=Rmdir /S/Q .\bin
-else
-	BIN=./bin
-	CREATE_BIN=mkdir -p $(BIN)
-	CLEAN=rm -rf $(BIN)
-endif
+all: $(LIPRODUCE_EXE) $(MIGRATIONS_EXE)
 
-.PHONY: build
+$(LIPRODUCE_EXE): $(LIPRODUCE_MAIN) $(SRCS) $(BIN) 
+	$(GOC) -o $@ $<
 
-build:
-	$(CREATE_BIN)
-	$(GO) build -o $(BIN)/liproduce$(EXE) ./cmd/liproduce 
-	$(GO) build -o $(BIN)/migrations$(EXE) ./cmd/migrations 
+$(MIGRATIONS_EXE): $(MIGRATIONS_MAIN) $(BIN)
+	$(GOC) -o $@ $<
+
+$(BIN):
+	mkdir $@
 
 clean:
-	$(CLEAN)	
+	rm -f $(LIPRODUCE_EXE)
+	rm -f $(MIGRATIONS_EXE)
 
-gen:
-	go run github.com/99designs/gqlgen
+# MIGRATIONS/RUNNING
+migrateinit: $(MIGRATIONS_EXE)
+	$(MIGRATIONS_EXE) init
 
-start:
-	$(BIN)/liproduce$(EXE)
+migrateup: $(MIGRATIONS_EXE)
+	$(MIGRATIONS_EXE) up
 
-migrateup:
-	$(BIN)/migrations$(EXE) up
+migratedown: $(MIGRATIONS_EXE)
+	$(MIGRATIONS_EXE) down
 
-migratedown:
-	$(BIN)/migrations$(EXE) down
+start: $(LIPRODUCE_EXE)
+	$(LIPRODUCE_EXE)
 
-dev: build start
+dev: clean $(LIPRODUCE_EXE)
+	$(LIPRODUCE_EXE)
