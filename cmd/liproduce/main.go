@@ -10,6 +10,7 @@ import (
 	"github.com/SatvikR/liproduce/pkg/database"
 	"github.com/SatvikR/liproduce/pkg/gen"
 	"github.com/SatvikR/liproduce/pkg/gen/generated"
+	"github.com/SatvikR/liproduce/pkg/utils"
 	_ "github.com/joho/godotenv/autoload"
 )
 
@@ -17,6 +18,7 @@ const defaultPort = "8080"
 
 func main() {
 	database.CreateConnection()
+	utils.InitHash()
 
 	port := os.Getenv("PORT")
 	if port == "" {
