@@ -1,4 +1,11 @@
 # Object Types
+type User {
+  id: Int!
+  username: String!
+  userType: String!
+  email: String!
+}
+
 type Producer {
   id: Int!
   uuid: String!
@@ -21,6 +28,11 @@ type ProducerResponse {
   error: String
 }
 
+type UserResponse {
+  uid: Int!
+  errors: [String!]
+}
+
 # Inputs
 input NewProducer {
   producerName: String!
@@ -30,6 +42,13 @@ input NewProducer {
 input NewProduct {
   productName: String!
   ownerId: Int!
+}
+
+input NewUser {
+  username: String!
+  userType: String!
+  email: String!
+  password: String!
 }
 
 # Queries
@@ -45,6 +64,8 @@ type Query {
 
 # Mutations
 type Mutation {
+  createUser(input: NewUser!): UserResponse!
+
   createProducer(input: NewProducer!): ProducerResponse!
   createProduct(input: NewProduct!): Product!
 }
