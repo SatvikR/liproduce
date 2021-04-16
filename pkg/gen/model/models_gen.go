@@ -16,7 +16,19 @@ type NewProduct struct {
 	OwnerID     int    `json:"ownerId"`
 }
 
+type NewUser struct {
+	Username string `json:"username"`
+	UserType string `json:"userType"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type ProducerResponse struct {
 	Producer *entities.Producer `json:"producer"`
 	Error    *string            `json:"error"`
+}
+
+type UserResponse struct {
+	UID    int      `json:"uid"`
+	Errors []string `json:"errors"`
 }

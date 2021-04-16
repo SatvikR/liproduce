@@ -49,6 +49,9 @@ models:
   Product:
     model:
       - github.com/SatvikR/liproduce/pkg/database/entities.Product
+  User:
+    model:
+      - github.com/SatvikR/liproduce/pkg/database/entities.User
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
